@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ ! -f /opt/react-native/app/package.json ]; then
+    cd /opt/react-native
+    echo yes | react-native init app
+fi
+
+cd /opt/react-native/app
+
+npm install
+
+react-native run-android

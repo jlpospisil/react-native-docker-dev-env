@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  app:
+    build: react-native
+    volumes:
+      - ./react-native/start_app:/usr/local/bin/start_app
+      - ./app:/opt/react-native/app
+    command: start_app
