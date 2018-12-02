@@ -2,7 +2,7 @@ FROM centos:centos7
 
 RUN yum -y install epel-release; yum clean all
 RUN yum -y update; yum clean all
-RUN yum -y install gcc-c++ make wget; yum clean all
+RUN yum -y install gcc-c++ make wget nmap; yum clean all
 RUN yum -y groupinstall 'Development Tools'; yum clean all
 
 ##############################################

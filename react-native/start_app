@@ -1,6 +1,29 @@
 #!/bin/bash
 
-ANDROID_DEVICE_IP=XXX.XXX.XXX.XXX
+ANDROID_DEVICE_IP=192.168.0.124
+ADB_PORT=5555
+
+###########################################################
+# Ensure android device is available
+###########################################################
+DEVICE_AVAILABLE=$(nmap -p $ADB_PORT $ANDROID_DEVICE_IP | awk '$2~/^open$/ { printf 1 }')
+
+if [ "$DEVICE_AVAILABLE" != 1 ]; then
+    # Get docker container id
+    DOCKER_CONTAINER_ID=$(cat /proc/self/cgroup | \
+        awk 'BEGIN { FS = ":" }; $2~/^name=systemd$/ { print }' | \
+        awk 'BEGIN { FS = "/" }; { print $NF }'
+    )
+
+    echo "Android device [$ANDROID_DEVICE_IP] is not available"
+        echo "To manually connect a physical android device, the following commands may be useful:"
+        echo "  docker exec $DOCKER_CONTAINER_ID adb tcpip 5555"
+        echo "  docker exec $DOCKER_CONTAINER_ID adb connect $ANDROID_DEVICE_IP:5555"
+        echo "  docker exec $DOCKER_CONTAINER_ID start_app"
+
+    # Keep container running so adb or react native commands can be manually run
+    tail -f /dev/null
+fi
 
 ###########################################################
 # If no react native app was provided, create one
@@ -19,8 +42,7 @@ npm install
 ###########################################################
 # Start ADB server
 ###########################################################
-adb start-server
-adb tcpip 5555
+adb tcpip $ADB_PORT
 
 ###########################################################
 # Connect to remote android device
