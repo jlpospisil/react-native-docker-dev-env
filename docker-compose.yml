@@ -3,6 +3,13 @@ version: '3'
 services:
   app:
     build: react-native
+    # Physical devices to pass through to container
+#    devices:
+#      - "/dev/ttyUSB0:/dev/ttyUSB0"
+    ports:
+      - 8081
+#      - 5037
+#      - 5554-5585
     volumes:
       - ./react-native/start_app:/usr/local/bin/start_app
       - ./app:/opt/react-native/app

@@ -1,12 +1,33 @@
 #!/bin/bash
 
+ANDROID_DEVICE_IP=XXX.XXX.XXX.XXX
+
+###########################################################
+# If no react native app was provided, create one
+###########################################################
 if [ ! -f /opt/react-native/app/package.json ]; then
     cd /opt/react-native
     echo yes | react-native init app
 fi
 
+###########################################################
+# Install dependencies
+###########################################################
 cd /opt/react-native/app
-
 npm install
 
+###########################################################
+# Start ADB server
+###########################################################
+adb start-server
+adb tcpip 5555
+
+###########################################################
+# Connect to remote android device
+###########################################################
+adb connect $ANDROID_DEVICE_IP:5555
+
+###########################################################
+# Start application
+###########################################################
 react-native run-android
